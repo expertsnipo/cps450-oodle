@@ -8,7 +8,7 @@ import com.bju.cps450.analysis.*;
 public final class AArgument extends PArgument
 {
     private TIdentifier _identifier_;
-    private PTypeDeclaration _typeDeclaration_;
+    private PType _type_;
 
     public AArgument()
     {
@@ -17,12 +17,12 @@ public final class AArgument extends PArgument
 
     public AArgument(
         @SuppressWarnings("hiding") TIdentifier _identifier_,
-        @SuppressWarnings("hiding") PTypeDeclaration _typeDeclaration_)
+        @SuppressWarnings("hiding") PType _type_)
     {
         // Constructor
         setIdentifier(_identifier_);
 
-        setTypeDeclaration(_typeDeclaration_);
+        setType(_type_);
 
     }
 
@@ -31,7 +31,7 @@ public final class AArgument extends PArgument
     {
         return new AArgument(
             cloneNode(this._identifier_),
-            cloneNode(this._typeDeclaration_));
+            cloneNode(this._type_));
     }
 
     @Override
@@ -65,16 +65,16 @@ public final class AArgument extends PArgument
         this._identifier_ = node;
     }
 
-    public PTypeDeclaration getTypeDeclaration()
+    public PType getType()
     {
-        return this._typeDeclaration_;
+        return this._type_;
     }
 
-    public void setTypeDeclaration(PTypeDeclaration node)
+    public void setType(PType node)
     {
-        if(this._typeDeclaration_ != null)
+        if(this._type_ != null)
         {
-            this._typeDeclaration_.parent(null);
+            this._type_.parent(null);
         }
 
         if(node != null)
@@ -87,7 +87,7 @@ public final class AArgument extends PArgument
             node.parent(this);
         }
 
-        this._typeDeclaration_ = node;
+        this._type_ = node;
     }
 
     @Override
@@ -95,7 +95,7 @@ public final class AArgument extends PArgument
     {
         return ""
             + toString(this._identifier_)
-            + toString(this._typeDeclaration_);
+            + toString(this._type_);
     }
 
     @Override
@@ -108,9 +108,9 @@ public final class AArgument extends PArgument
             return;
         }
 
-        if(this._typeDeclaration_ == child)
+        if(this._type_ == child)
         {
-            this._typeDeclaration_ = null;
+            this._type_ = null;
             return;
         }
 
@@ -127,9 +127,9 @@ public final class AArgument extends PArgument
             return;
         }
 
-        if(this._typeDeclaration_ == oldChild)
+        if(this._type_ == oldChild)
         {
-            setTypeDeclaration((PTypeDeclaration) newChild);
+            setType((PType) newChild);
             return;
         }
 

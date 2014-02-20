@@ -8,15 +8,11 @@ import com.bju.cps450.analysis.*;
 @SuppressWarnings("nls")
 public final class AClassDefinition extends PClassDefinition
 {
-    private TClasskey _classkey_;
-    private TIdentifier _beginId_;
-    private PInheritsClause _inheritsClause_;
-    private TIs _is_;
-    private PNewlines _newlines_;
-    private final LinkedList<PVariableDeclarations> _variableDeclarations_ = new LinkedList<PVariableDeclarations>();
-    private final LinkedList<PMethodDeclarations> _methodDeclarations_ = new LinkedList<PMethodDeclarations>();
-    private TEnd _end_;
-    private TIdentifier _endId_;
+    private TIdentifier _first_;
+    private PInheritsClass _inheritsClass_;
+    private final LinkedList<PVariable> _variable_ = new LinkedList<PVariable>();
+    private final LinkedList<PMethod> _method_ = new LinkedList<PMethod>();
+    private TIdentifier _last_;
 
     public AClassDefinition()
     {
@@ -24,34 +20,22 @@ public final class AClassDefinition extends PClassDefinition
     }
 
     public AClassDefinition(
-        @SuppressWarnings("hiding") TClasskey _classkey_,
-        @SuppressWarnings("hiding") TIdentifier _beginId_,
-        @SuppressWarnings("hiding") PInheritsClause _inheritsClause_,
-        @SuppressWarnings("hiding") TIs _is_,
-        @SuppressWarnings("hiding") PNewlines _newlines_,
-        @SuppressWarnings("hiding") List<?> _variableDeclarations_,
-        @SuppressWarnings("hiding") List<?> _methodDeclarations_,
-        @SuppressWarnings("hiding") TEnd _end_,
-        @SuppressWarnings("hiding") TIdentifier _endId_)
+        @SuppressWarnings("hiding") TIdentifier _first_,
+        @SuppressWarnings("hiding") PInheritsClass _inheritsClass_,
+        @SuppressWarnings("hiding") List<?> _variable_,
+        @SuppressWarnings("hiding") List<?> _method_,
+        @SuppressWarnings("hiding") TIdentifier _last_)
     {
         // Constructor
-        setClasskey(_classkey_);
+        setFirst(_first_);
 
-        setBeginId(_beginId_);
+        setInheritsClass(_inheritsClass_);
 
-        setInheritsClause(_inheritsClause_);
+        setVariable(_variable_);
 
-        setIs(_is_);
+        setMethod(_method_);
 
-        setNewlines(_newlines_);
-
-        setVariableDeclarations(_variableDeclarations_);
-
-        setMethodDeclarations(_methodDeclarations_);
-
-        setEnd(_end_);
-
-        setEndId(_endId_);
+        setLast(_last_);
 
     }
 
@@ -59,15 +43,11 @@ public final class AClassDefinition extends PClassDefinition
     public Object clone()
     {
         return new AClassDefinition(
-            cloneNode(this._classkey_),
-            cloneNode(this._beginId_),
-            cloneNode(this._inheritsClause_),
-            cloneNode(this._is_),
-            cloneNode(this._newlines_),
-            cloneList(this._variableDeclarations_),
-            cloneList(this._methodDeclarations_),
-            cloneNode(this._end_),
-            cloneNode(this._endId_));
+            cloneNode(this._first_),
+            cloneNode(this._inheritsClass_),
+            cloneList(this._variable_),
+            cloneList(this._method_),
+            cloneNode(this._last_));
     }
 
     @Override
@@ -76,16 +56,16 @@ public final class AClassDefinition extends PClassDefinition
         ((Analysis) sw).caseAClassDefinition(this);
     }
 
-    public TClasskey getClasskey()
+    public TIdentifier getFirst()
     {
-        return this._classkey_;
+        return this._first_;
     }
 
-    public void setClasskey(TClasskey node)
+    public void setFirst(TIdentifier node)
     {
-        if(this._classkey_ != null)
+        if(this._first_ != null)
         {
-            this._classkey_.parent(null);
+            this._first_.parent(null);
         }
 
         if(node != null)
@@ -98,19 +78,19 @@ public final class AClassDefinition extends PClassDefinition
             node.parent(this);
         }
 
-        this._classkey_ = node;
+        this._first_ = node;
     }
 
-    public TIdentifier getBeginId()
+    public PInheritsClass getInheritsClass()
     {
-        return this._beginId_;
+        return this._inheritsClass_;
     }
 
-    public void setBeginId(TIdentifier node)
+    public void setInheritsClass(PInheritsClass node)
     {
-        if(this._beginId_ != null)
+        if(this._inheritsClass_ != null)
         {
-            this._beginId_.parent(null);
+            this._inheritsClass_.parent(null);
         }
 
         if(node != null)
@@ -123,146 +103,71 @@ public final class AClassDefinition extends PClassDefinition
             node.parent(this);
         }
 
-        this._beginId_ = node;
+        this._inheritsClass_ = node;
     }
 
-    public PInheritsClause getInheritsClause()
+    public LinkedList<PVariable> getVariable()
     {
-        return this._inheritsClause_;
+        return this._variable_;
     }
 
-    public void setInheritsClause(PInheritsClause node)
+    public void setVariable(List<?> list)
     {
-        if(this._inheritsClause_ != null)
-        {
-            this._inheritsClause_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._inheritsClause_ = node;
-    }
-
-    public TIs getIs()
-    {
-        return this._is_;
-    }
-
-    public void setIs(TIs node)
-    {
-        if(this._is_ != null)
-        {
-            this._is_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._is_ = node;
-    }
-
-    public PNewlines getNewlines()
-    {
-        return this._newlines_;
-    }
-
-    public void setNewlines(PNewlines node)
-    {
-        if(this._newlines_ != null)
-        {
-            this._newlines_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._newlines_ = node;
-    }
-
-    public LinkedList<PVariableDeclarations> getVariableDeclarations()
-    {
-        return this._variableDeclarations_;
-    }
-
-    public void setVariableDeclarations(List<?> list)
-    {
-        for(PVariableDeclarations e : this._variableDeclarations_)
+        for(PVariable e : this._variable_)
         {
             e.parent(null);
         }
-        this._variableDeclarations_.clear();
+        this._variable_.clear();
 
         for(Object obj_e : list)
         {
-            PVariableDeclarations e = (PVariableDeclarations) obj_e;
+            PVariable e = (PVariable) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
-            this._variableDeclarations_.add(e);
+            this._variable_.add(e);
         }
     }
 
-    public LinkedList<PMethodDeclarations> getMethodDeclarations()
+    public LinkedList<PMethod> getMethod()
     {
-        return this._methodDeclarations_;
+        return this._method_;
     }
 
-    public void setMethodDeclarations(List<?> list)
+    public void setMethod(List<?> list)
     {
-        for(PMethodDeclarations e : this._methodDeclarations_)
+        for(PMethod e : this._method_)
         {
             e.parent(null);
         }
-        this._methodDeclarations_.clear();
+        this._method_.clear();
 
         for(Object obj_e : list)
         {
-            PMethodDeclarations e = (PMethodDeclarations) obj_e;
+            PMethod e = (PMethod) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
-            this._methodDeclarations_.add(e);
+            this._method_.add(e);
         }
     }
 
-    public TEnd getEnd()
+    public TIdentifier getLast()
     {
-        return this._end_;
+        return this._last_;
     }
 
-    public void setEnd(TEnd node)
+    public void setLast(TIdentifier node)
     {
-        if(this._end_ != null)
+        if(this._last_ != null)
         {
-            this._end_.parent(null);
+            this._last_.parent(null);
         }
 
         if(node != null)
@@ -275,102 +180,49 @@ public final class AClassDefinition extends PClassDefinition
             node.parent(this);
         }
 
-        this._end_ = node;
-    }
-
-    public TIdentifier getEndId()
-    {
-        return this._endId_;
-    }
-
-    public void setEndId(TIdentifier node)
-    {
-        if(this._endId_ != null)
-        {
-            this._endId_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._endId_ = node;
+        this._last_ = node;
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._classkey_)
-            + toString(this._beginId_)
-            + toString(this._inheritsClause_)
-            + toString(this._is_)
-            + toString(this._newlines_)
-            + toString(this._variableDeclarations_)
-            + toString(this._methodDeclarations_)
-            + toString(this._end_)
-            + toString(this._endId_);
+            + toString(this._first_)
+            + toString(this._inheritsClass_)
+            + toString(this._variable_)
+            + toString(this._method_)
+            + toString(this._last_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._classkey_ == child)
+        if(this._first_ == child)
         {
-            this._classkey_ = null;
+            this._first_ = null;
             return;
         }
 
-        if(this._beginId_ == child)
+        if(this._inheritsClass_ == child)
         {
-            this._beginId_ = null;
+            this._inheritsClass_ = null;
             return;
         }
 
-        if(this._inheritsClause_ == child)
-        {
-            this._inheritsClause_ = null;
-            return;
-        }
-
-        if(this._is_ == child)
-        {
-            this._is_ = null;
-            return;
-        }
-
-        if(this._newlines_ == child)
-        {
-            this._newlines_ = null;
-            return;
-        }
-
-        if(this._variableDeclarations_.remove(child))
+        if(this._variable_.remove(child))
         {
             return;
         }
 
-        if(this._methodDeclarations_.remove(child))
+        if(this._method_.remove(child))
         {
             return;
         }
 
-        if(this._end_ == child)
+        if(this._last_ == child)
         {
-            this._end_ = null;
-            return;
-        }
-
-        if(this._endId_ == child)
-        {
-            this._endId_ = null;
+            this._last_ = null;
             return;
         }
 
@@ -381,43 +233,25 @@ public final class AClassDefinition extends PClassDefinition
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._classkey_ == oldChild)
+        if(this._first_ == oldChild)
         {
-            setClasskey((TClasskey) newChild);
+            setFirst((TIdentifier) newChild);
             return;
         }
 
-        if(this._beginId_ == oldChild)
+        if(this._inheritsClass_ == oldChild)
         {
-            setBeginId((TIdentifier) newChild);
+            setInheritsClass((PInheritsClass) newChild);
             return;
         }
 
-        if(this._inheritsClause_ == oldChild)
-        {
-            setInheritsClause((PInheritsClause) newChild);
-            return;
-        }
-
-        if(this._is_ == oldChild)
-        {
-            setIs((TIs) newChild);
-            return;
-        }
-
-        if(this._newlines_ == oldChild)
-        {
-            setNewlines((PNewlines) newChild);
-            return;
-        }
-
-        for(ListIterator<PVariableDeclarations> i = this._variableDeclarations_.listIterator(); i.hasNext();)
+        for(ListIterator<PVariable> i = this._variable_.listIterator(); i.hasNext();)
         {
             if(i.next() == oldChild)
             {
                 if(newChild != null)
                 {
-                    i.set((PVariableDeclarations) newChild);
+                    i.set((PVariable) newChild);
                     newChild.parent(this);
                     oldChild.parent(null);
                     return;
@@ -429,13 +263,13 @@ public final class AClassDefinition extends PClassDefinition
             }
         }
 
-        for(ListIterator<PMethodDeclarations> i = this._methodDeclarations_.listIterator(); i.hasNext();)
+        for(ListIterator<PMethod> i = this._method_.listIterator(); i.hasNext();)
         {
             if(i.next() == oldChild)
             {
                 if(newChild != null)
                 {
-                    i.set((PMethodDeclarations) newChild);
+                    i.set((PMethod) newChild);
                     newChild.parent(this);
                     oldChild.parent(null);
                     return;
@@ -447,15 +281,9 @@ public final class AClassDefinition extends PClassDefinition
             }
         }
 
-        if(this._end_ == oldChild)
+        if(this._last_ == oldChild)
         {
-            setEnd((TEnd) newChild);
-            return;
-        }
-
-        if(this._endId_ == oldChild)
-        {
-            setEndId((TIdentifier) newChild);
+            setLast((TIdentifier) newChild);
             return;
         }
 

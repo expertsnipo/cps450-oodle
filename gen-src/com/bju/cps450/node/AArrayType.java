@@ -8,9 +8,7 @@ import com.bju.cps450.analysis.*;
 public final class AArrayType extends PType
 {
     private PType _type_;
-    private TLBracket _lBracket_;
     private PExpression _expression_;
-    private TRBracket _rBracket_;
 
     public AArrayType()
     {
@@ -19,18 +17,12 @@ public final class AArrayType extends PType
 
     public AArrayType(
         @SuppressWarnings("hiding") PType _type_,
-        @SuppressWarnings("hiding") TLBracket _lBracket_,
-        @SuppressWarnings("hiding") PExpression _expression_,
-        @SuppressWarnings("hiding") TRBracket _rBracket_)
+        @SuppressWarnings("hiding") PExpression _expression_)
     {
         // Constructor
         setType(_type_);
 
-        setLBracket(_lBracket_);
-
         setExpression(_expression_);
-
-        setRBracket(_rBracket_);
 
     }
 
@@ -39,9 +31,7 @@ public final class AArrayType extends PType
     {
         return new AArrayType(
             cloneNode(this._type_),
-            cloneNode(this._lBracket_),
-            cloneNode(this._expression_),
-            cloneNode(this._rBracket_));
+            cloneNode(this._expression_));
     }
 
     @Override
@@ -75,31 +65,6 @@ public final class AArrayType extends PType
         this._type_ = node;
     }
 
-    public TLBracket getLBracket()
-    {
-        return this._lBracket_;
-    }
-
-    public void setLBracket(TLBracket node)
-    {
-        if(this._lBracket_ != null)
-        {
-            this._lBracket_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._lBracket_ = node;
-    }
-
     public PExpression getExpression()
     {
         return this._expression_;
@@ -125,39 +90,12 @@ public final class AArrayType extends PType
         this._expression_ = node;
     }
 
-    public TRBracket getRBracket()
-    {
-        return this._rBracket_;
-    }
-
-    public void setRBracket(TRBracket node)
-    {
-        if(this._rBracket_ != null)
-        {
-            this._rBracket_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._rBracket_ = node;
-    }
-
     @Override
     public String toString()
     {
         return ""
             + toString(this._type_)
-            + toString(this._lBracket_)
-            + toString(this._expression_)
-            + toString(this._rBracket_);
+            + toString(this._expression_);
     }
 
     @Override
@@ -170,21 +108,9 @@ public final class AArrayType extends PType
             return;
         }
 
-        if(this._lBracket_ == child)
-        {
-            this._lBracket_ = null;
-            return;
-        }
-
         if(this._expression_ == child)
         {
             this._expression_ = null;
-            return;
-        }
-
-        if(this._rBracket_ == child)
-        {
-            this._rBracket_ = null;
             return;
         }
 
@@ -201,21 +127,9 @@ public final class AArrayType extends PType
             return;
         }
 
-        if(this._lBracket_ == oldChild)
-        {
-            setLBracket((TLBracket) newChild);
-            return;
-        }
-
         if(this._expression_ == oldChild)
         {
             setExpression((PExpression) newChild);
-            return;
-        }
-
-        if(this._rBracket_ == oldChild)
-        {
-            setRBracket((TRBracket) newChild);
             return;
         }
 

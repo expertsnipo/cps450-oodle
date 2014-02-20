@@ -2,12 +2,14 @@
 
 package com.bju.cps450.node;
 
+import java.util.*;
 import com.bju.cps450.analysis.*;
 
 @SuppressWarnings("nls")
 public final class ALoopStatementStatement extends PStatement
 {
-    private PLoopStatement _loopStatement_;
+    private PExpression _expression_;
+    private final LinkedList<PStatement> _statement_ = new LinkedList<PStatement>();
 
     public ALoopStatementStatement()
     {
@@ -15,10 +17,13 @@ public final class ALoopStatementStatement extends PStatement
     }
 
     public ALoopStatementStatement(
-        @SuppressWarnings("hiding") PLoopStatement _loopStatement_)
+        @SuppressWarnings("hiding") PExpression _expression_,
+        @SuppressWarnings("hiding") List<?> _statement_)
     {
         // Constructor
-        setLoopStatement(_loopStatement_);
+        setExpression(_expression_);
+
+        setStatement(_statement_);
 
     }
 
@@ -26,7 +31,8 @@ public final class ALoopStatementStatement extends PStatement
     public Object clone()
     {
         return new ALoopStatementStatement(
-            cloneNode(this._loopStatement_));
+            cloneNode(this._expression_),
+            cloneList(this._statement_));
     }
 
     @Override
@@ -35,16 +41,16 @@ public final class ALoopStatementStatement extends PStatement
         ((Analysis) sw).caseALoopStatementStatement(this);
     }
 
-    public PLoopStatement getLoopStatement()
+    public PExpression getExpression()
     {
-        return this._loopStatement_;
+        return this._expression_;
     }
 
-    public void setLoopStatement(PLoopStatement node)
+    public void setExpression(PExpression node)
     {
-        if(this._loopStatement_ != null)
+        if(this._expression_ != null)
         {
-            this._loopStatement_.parent(null);
+            this._expression_.parent(null);
         }
 
         if(node != null)
@@ -57,23 +63,55 @@ public final class ALoopStatementStatement extends PStatement
             node.parent(this);
         }
 
-        this._loopStatement_ = node;
+        this._expression_ = node;
+    }
+
+    public LinkedList<PStatement> getStatement()
+    {
+        return this._statement_;
+    }
+
+    public void setStatement(List<?> list)
+    {
+        for(PStatement e : this._statement_)
+        {
+            e.parent(null);
+        }
+        this._statement_.clear();
+
+        for(Object obj_e : list)
+        {
+            PStatement e = (PStatement) obj_e;
+            if(e.parent() != null)
+            {
+                e.parent().removeChild(e);
+            }
+
+            e.parent(this);
+            this._statement_.add(e);
+        }
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._loopStatement_);
+            + toString(this._expression_)
+            + toString(this._statement_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._loopStatement_ == child)
+        if(this._expression_ == child)
         {
-            this._loopStatement_ = null;
+            this._expression_ = null;
+            return;
+        }
+
+        if(this._statement_.remove(child))
+        {
             return;
         }
 
@@ -84,10 +122,28 @@ public final class ALoopStatementStatement extends PStatement
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._loopStatement_ == oldChild)
+        if(this._expression_ == oldChild)
         {
-            setLoopStatement((PLoopStatement) newChild);
+            setExpression((PExpression) newChild);
             return;
+        }
+
+        for(ListIterator<PStatement> i = this._statement_.listIterator(); i.hasNext();)
+        {
+            if(i.next() == oldChild)
+            {
+                if(newChild != null)
+                {
+                    i.set((PStatement) newChild);
+                    newChild.parent(this);
+                    oldChild.parent(null);
+                    return;
+                }
+
+                i.remove();
+                oldChild.parent(null);
+                return;
+            }
         }
 
         throw new RuntimeException("Not a child.");

@@ -80,7 +80,7 @@ Ignored Tokens
   
 Productions
 
-  classes {-> classes*}  = newlines? class_definition classes_tail* T.newline* {-> New classes([class_definition.class_definition, classes_tail.class_definition]) };
+  classes {-> classes}  = newlines? class_definition classes_tail* T.newline* {-> New classes([class_definition.class_definition, classes_tail.class_definition]) };
   
   classes_tail {-> class_definition } = newlines class_definition {-> class_definition.class_definition };
   
@@ -102,7 +102,7 @@ Productions
                         | {int}     T.int {-> New type.int(int) }
                         | {string}  T.string {-> New type.string(string) }
                         | {class}   T.identifier {-> New type.class(identifier) }
-                        | {array}   type T.l_bracket expression? T.r_bracket {-> New type.array(expression) };
+                        | {array}   type T.l_bracket expression? T.r_bracket {-> New type.array(type, expression) };
   
   initializer {-> expression } = T.assignment expression {-> expression.expression };
   
@@ -110,40 +110,40 @@ Productions
 						  variable_declarations*
 						  T.begin [middle_newlines]:newlines
 						  statement_list?
-						  T.end [end_id]:T.identifier [end_newlines]:newlines {-> New method(begin_id, [argument_list.argument], type_declaration.type_declaration, [variable_declarations.variable], [statement_list.statement], end_id) };
+						  T.end [end_id]:T.identifier [end_newlines]:newlines {-> New method(begin_id, [argument_list.argument], type_declaration.type, [variable_declarations.variable], [statement_list.statement], end_id) };
   
-  argument_list {-> argument* } = argument argument_list_tail* {-> [New argument(argument.argument), argument_list_tail.argument] };
+  argument_list {-> argument* } = argument argument_list_tail* {-> [argument.argument, argument_list_tail.argument] };
   
-  argument_list_tail {-> argument } = T.semicolon argument {-> New argument(argument.argument) };
+  argument_list_tail {-> argument } = T.semicolon argument {-> argument.argument };
   
   argument {-> argument } = T.identifier type_declaration {-> New argument(identifier, type_declaration.type) };
   
-  statement_list {-> statement* } = statement statement_list_tail* newlines {-> [New statement(statement.statement), statement_list_tail.statement] };
+  statement_list {-> statement* } = statement statement_list_tail* newlines {-> [statement.statement, statement_list_tail.statement] };
   
-  statement_list_tail {-> statement } = newlines statement {-> New statement(statement.statement) };
+  statement_list_tail {-> statement } = newlines statement {-> statement.statement };
   
   statement {-> statement } = {if_statement}     if_statement {-> if_statement.statement }
                         | {loop_statement}   loop_statement {-> loop_statement.statement }
                         | {call_statement}   call_statement {-> call_statement.statement }
-                        | {assign_statement} assignment_statement {-> assign_statement.statement };
+                        | {assign_statement} assignment_statement {-> assignment_statement.statement };
                         
   if_statement {-> statement } = [begin_if]:T.if expression T.then newlines
                           statement_list
                           else_statement?
-                          T.end [end_if]:T.if {-> New statement.if(expression.expression, [statement_list.statement], [else_statement.statement]) };
+                          T.end [end_if]:T.if {-> New statement.if_statement(expression.expression, [statement_list.statement], [else_statement.statement]) };
   
-  else_statement {-> statement } = T.else newlines
-                          statement_list {-> statement_list.statement};
+  else_statement {-> statement* } = T.else newlines
+                          statement_list {-> [statement_list.statement]};
                           
   loop_statement {-> statement } = [begin_loop]:T.loop T.while expression newlines
                           statement_list
                           T.end [end_loop]:T.loop {-> New statement.loop_statement(expression.expression, [statement_list.statement])};
                           
-  call_statement {-> statement } = expression_dot? T.identifier T.l_paren expression_list? T.r_paren {-> New statement.call_statement(expression_dot.expression, identifier, [expression_list.expression]) };
+  call_statement {-> statement } = expression_dot? T.identifier T.l_paren expression_list? T.r_paren {-> New statement.call_statement(identifier, [expression_list.expression]) };
   
-  assignment_statement {-> statement } = T.identifier array+ T.assignment expression {-> New statement.assign_statement(identifier, [array], expression.expression) };
+  assignment_statement {-> statement } = T.identifier array+ T.assignment expression {-> New statement.assign_statement(identifier, [array.expression], expression.expression) };
                         
-  expression_list {-> expression* } = expression expression_list_tail* {-> [New expression(expression.expression), expression_list_tail.expression] };
+  expression_list {-> expression* } = expression expression_list_tail* {-> [expression.expression, expression_list_tail.expression] };
   
   expression_list_tail {-> expression } = T.comma expression {-> expression.expression };
   
@@ -183,14 +183,14 @@ Productions
                         | {false}      T.false {-> New expression.false(false) }
                         | {null}       T.null {-> New expression.null(null) }
                         | {me}         T.me{-> New expression.me(me) }
-                        | {new}        T.new type {-> New expression.new(new) }
-                        | {call}       expression_dot? T.identifier T.l_paren expression_list? T.r_paren {-> New expression.call(expression_dot.expression, identifier, [expression_list.expression]) }
-                        | {array}      T.identifier array+ {-> New expression.array(identifier, [expression.array]) }
+                        | {new}        T.new type {-> New expression.new(type.type) }
+                        | {call}       expression_dot? T.identifier T.l_paren expression_list? T.r_paren {-> New expression.call(identifier, [expression_list.expression]) }
+                        | {array}      T.identifier array+ {-> New expression.array(identifier, [array.expression]) }
                         | {paren}      T.l_paren expression T.r_paren {-> expression.expression };
   
   expression_dot {-> expression } = expression_lvl1 T.dot {-> expression_lvl1.expression};
   
-  array {-> expression }          = T.l_bracket expression T.r_bracket {-> New expression.array(expression.expression) };
+  array {-> expression }          = T.l_bracket expression T.r_bracket {-> expression.expression };
   
 Abstract Syntax Tree
 
@@ -203,7 +203,7 @@ Abstract Syntax Tree
                         
   inherits_class        = identifier;
                      
-  variable				= identifier type? initializer?;  
+  variable				= identifier type? expression?;  
   
   type                  = {boolean} boolean
                         | {int}     int
@@ -211,33 +211,18 @@ Abstract Syntax Tree
                         | {class}   identifier
                         | {array}   type expression?;
   
-  initializer           = T.assignment expression;
   
-  method                = [first]:identifier argument? type?
+  method                = [first]:identifier argument* type?
 						  variable*						  
-						  statement?
+						  statement*
 						  [last]:identifier;
     
   argument              = identifier type;
     
-  statement             = {if_statement}     if_statement
-                        | {loop_statement}   loop_statement
-                        | {call_statement}   call_statement
-                        | {assign_statement} assignment_statement;
-                        
-  if_statement          = expression
-                          statement*
-                          else_statement?;
-  
-  else_statement        = statement*;
-                          
-  loop_statement        = expression
-                          statement*;
-  
-  call_statement        = identifier expression?;
-                          
-  
-  assignment_statement  = identifier [array]:expression+ expression;
+  statement             = {if_statement}     expression [if]:statement* [else]:statement*  
+                        | {loop_statement}   expression statement*
+                        | {call_statement}   identifier expression*
+                        | {assign_statement} identifier [array]:expression+ expression;                     
                           
   expression = {or}  [lhs]:expression [rhs]:expression
 			| {and} [lhs]:expression [rhs]:expression
@@ -259,9 +244,9 @@ Abstract Syntax Tree
 			| {false} false
             | {null} null 
             | {me} me 
-            | {new} expression  
-            | {call} identifier* expression*
-            | {array} expression
+            | {new} type  
+            | {call} identifier expression*
+            | {array} identifier expression+
             | {paren} expression;
   
 

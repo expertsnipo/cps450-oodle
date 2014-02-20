@@ -2,12 +2,14 @@
 
 package com.bju.cps450.node;
 
+import java.util.*;
 import com.bju.cps450.analysis.*;
 
 @SuppressWarnings("nls")
 public final class ACallStatementStatement extends PStatement
 {
-    private PCallStatement _callStatement_;
+    private TIdentifier _identifier_;
+    private final LinkedList<PExpression> _expression_ = new LinkedList<PExpression>();
 
     public ACallStatementStatement()
     {
@@ -15,10 +17,13 @@ public final class ACallStatementStatement extends PStatement
     }
 
     public ACallStatementStatement(
-        @SuppressWarnings("hiding") PCallStatement _callStatement_)
+        @SuppressWarnings("hiding") TIdentifier _identifier_,
+        @SuppressWarnings("hiding") List<?> _expression_)
     {
         // Constructor
-        setCallStatement(_callStatement_);
+        setIdentifier(_identifier_);
+
+        setExpression(_expression_);
 
     }
 
@@ -26,7 +31,8 @@ public final class ACallStatementStatement extends PStatement
     public Object clone()
     {
         return new ACallStatementStatement(
-            cloneNode(this._callStatement_));
+            cloneNode(this._identifier_),
+            cloneList(this._expression_));
     }
 
     @Override
@@ -35,16 +41,16 @@ public final class ACallStatementStatement extends PStatement
         ((Analysis) sw).caseACallStatementStatement(this);
     }
 
-    public PCallStatement getCallStatement()
+    public TIdentifier getIdentifier()
     {
-        return this._callStatement_;
+        return this._identifier_;
     }
 
-    public void setCallStatement(PCallStatement node)
+    public void setIdentifier(TIdentifier node)
     {
-        if(this._callStatement_ != null)
+        if(this._identifier_ != null)
         {
-            this._callStatement_.parent(null);
+            this._identifier_.parent(null);
         }
 
         if(node != null)
@@ -57,23 +63,55 @@ public final class ACallStatementStatement extends PStatement
             node.parent(this);
         }
 
-        this._callStatement_ = node;
+        this._identifier_ = node;
+    }
+
+    public LinkedList<PExpression> getExpression()
+    {
+        return this._expression_;
+    }
+
+    public void setExpression(List<?> list)
+    {
+        for(PExpression e : this._expression_)
+        {
+            e.parent(null);
+        }
+        this._expression_.clear();
+
+        for(Object obj_e : list)
+        {
+            PExpression e = (PExpression) obj_e;
+            if(e.parent() != null)
+            {
+                e.parent().removeChild(e);
+            }
+
+            e.parent(this);
+            this._expression_.add(e);
+        }
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._callStatement_);
+            + toString(this._identifier_)
+            + toString(this._expression_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._callStatement_ == child)
+        if(this._identifier_ == child)
         {
-            this._callStatement_ = null;
+            this._identifier_ = null;
+            return;
+        }
+
+        if(this._expression_.remove(child))
+        {
             return;
         }
 
@@ -84,10 +122,28 @@ public final class ACallStatementStatement extends PStatement
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._callStatement_ == oldChild)
+        if(this._identifier_ == oldChild)
         {
-            setCallStatement((PCallStatement) newChild);
+            setIdentifier((TIdentifier) newChild);
             return;
+        }
+
+        for(ListIterator<PExpression> i = this._expression_.listIterator(); i.hasNext();)
+        {
+            if(i.next() == oldChild)
+            {
+                if(newChild != null)
+                {
+                    i.set((PExpression) newChild);
+                    newChild.parent(this);
+                    oldChild.parent(null);
+                    return;
+                }
+
+                i.remove();
+                oldChild.parent(null);
+                return;
+            }
         }
 
         throw new RuntimeException("Not a child.");
