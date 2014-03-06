@@ -74,8 +74,8 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 			}			
 		} catch (Exception e) { 
 			// oh no
-			System.out.println("An exception has occurred.");
-			e.printStackTrace();
+			System.out.println("An exception has occurred: " + e.getMessage());
+			//e.printStackTrace();
 		}
 	}
 
@@ -86,8 +86,8 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 			Application.symbolTable.endScope();
 		} catch (Exception e) {
 			// ack
-			System.out.println("Error creating class");
-			e.printStackTrace();
+			System.out.println("Error creating class: " + e.getMessage());
+			//e.printStackTrace();
 		}
 	}
 

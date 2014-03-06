@@ -1,5 +1,9 @@
 ~ test.ood
 
-class TestClass is
+class Reader is
 testvar := 1
-end TestClass
+end Reader
+
+class Writer is
+
+end Writer
