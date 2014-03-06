@@ -1,0 +1,5 @@
+~ test.ood
+
+class TestClass is
+testvar := 1
+end TestClass
