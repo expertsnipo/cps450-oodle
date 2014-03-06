@@ -17,6 +17,8 @@ import java.io.PushbackReader;
 import java.io.StringReader;
 
 import com.bju.cps450.lexer.LexerException;
+import com.bju.cps450.node.Start;
+import com.bju.cps450.OodleSemanticChecker;
 
 public class Oodle
 {
@@ -69,7 +71,12 @@ public class Oodle
 		try {
 			lexer = new OodleLexer(new PushbackReader(new StringReader(source)));
 			OodleParser oodleParser = new OodleParser(lexer);
-			oodleParser.parse();
+			Start node = oodleParser.parse();
+			//perform semantic checks
+			OodleSemanticChecker checker = new OodleSemanticChecker();
+			node.apply(checker); //invoke SemanticChecker traversal
+			
+			
 		} catch (LexerException ex) {
 			Application.getErrors().addLexicalError();
 			System.out.println(Application.getFileAndLineNumbers().getFile(lexer.peek().getLine()) + ":" + Application.getFileAndLineNumbers().getLine(lexer.peek().getLine()) + "," + lexer.peek().getPos() + ":" + ex.getMessage());

@@ -7,10 +7,13 @@
 
 package com.bju.cps450;
 
+import com.bju.cps450.symbol_table.SymbolTable;
+
 public class Application {
 	private static Options options;
 	private static FileAndLineNumbers fileAndLineNumbers;
 	private static Errors errors;
+	public static SymbolTable symbolTable = new SymbolTable();
 	
 	/* getOptions
 	 * Arguments:
