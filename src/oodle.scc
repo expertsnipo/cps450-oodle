@@ -141,7 +141,7 @@ Productions
                           
   call_statement {-> statement } = expression_dot? T.identifier T.l_paren expression_list? T.r_paren {-> New statement.call_statement(identifier, [expression_list.expression]) };
   
-  assignment_statement {-> statement } = T.identifier array+ T.assignment expression {-> New statement.assign_statement(identifier, [array.expression], expression.expression) };
+  assignment_statement {-> statement } = T.identifier array* T.assignment expression {-> New statement.assign_statement(identifier, [array.expression], expression.expression) };
                         
   expression_list {-> expression* } = expression expression_list_tail* {-> [expression.expression, expression_list_tail.expression] };
   
@@ -222,7 +222,7 @@ Abstract Syntax Tree
   statement             = {if_statement}     expression [if]:statement* [else]:statement*  
                         | {loop_statement}   expression statement*
                         | {call_statement}   identifier expression*
-                        | {assign_statement} identifier [array]:expression+ expression;                     
+                        | {assign_statement} identifier [array]:expression* expression;                     
                           
   expression = {or}  [lhs]:expression [rhs]:expression
 			| {and} [lhs]:expression [rhs]:expression
@@ -246,7 +246,7 @@ Abstract Syntax Tree
             | {me} me 
             | {new} type  
             | {call} identifier expression*
-            | {array} identifier expression+
+            | {array} identifier expression*
             | {paren} expression;
   
 
