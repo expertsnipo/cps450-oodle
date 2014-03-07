@@ -103,7 +103,7 @@ public class SymbolTable {
 	}
 	
 	public void beginScope() throws Exception {
-		if(symbolTable.size() == 2) {
+		if(symbolTable.size() == 3) {
 			throw new Exception("stack overflow");
 		}
 		++scope;
