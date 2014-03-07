@@ -7,11 +7,13 @@ class test1 is
   x: int
   y: boolean
   z: int
+  a: string
 
   start() is
   begin
     x := 3                     ~ REFERENCE x: int 
     z := x - 1                 ~ REFERENCE z: int ; REFERENCE x: int
+    a := "hello"
 
     y := true                  ~ REFERENCE y: boolean
   end start

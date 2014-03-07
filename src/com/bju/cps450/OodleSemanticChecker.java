@@ -14,6 +14,8 @@ import com.bju.cps450.node.AIdentifierExpression;
 import com.bju.cps450.node.AIntType;
 import com.bju.cps450.node.AIntegerExpression;
 import com.bju.cps450.node.AMethod;
+import com.bju.cps450.node.AStringExpression;
+import com.bju.cps450.node.AStringType;
 import com.bju.cps450.node.ASubtractExpression;
 import com.bju.cps450.node.ATrueExpression;
 import com.bju.cps450.node.AVariable;
@@ -358,6 +360,32 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 	            }			
 		}
 		outAMethod(node);		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.bju.cps450.analysis.DepthFirstAdapter#outAStringType(com.bju.cps450.node.AStringType)
+	 */
+	@Override
+	public void outAStringType(AStringType node) {
+		super.outAStringType(node);
+		initNode(node);		
+		//string type is not supported, issue message
+		System.out.println("Unsupported feature: string: " + node.toString() + "not supported.");
+		
+		attributeGrammarMap.get(node).put("type", Type.error);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.bju.cps450.analysis.DepthFirstAdapter#outAStringExpression(com.bju.cps450.node.AStringExpression)
+	 */
+	@Override
+	public void outAStringExpression(AStringExpression node) {
+		super.outAStringExpression(node);
+		initNode(node);
+		//string type is not supported, issue message
+		System.out.println("Unsupported feature: string expression " + node.toString() + "not supported.");	
+		
+		attributeGrammarMap.get(node).put("type", Type.error);
 	}
 	
 }
