@@ -3115,14 +3115,15 @@ public class Parser
         PStatement pstatementNode1;
         {
             // Block
-        TIdentifier tidentifierNode2;
-        LinkedList<Object> listNode3 = new LinkedList<Object>();
-        tidentifierNode2 = (TIdentifier)nodeArrayList1.get(0);
+        @SuppressWarnings("unused") Object nullNode2 = null;
+        TIdentifier tidentifierNode3;
+        LinkedList<Object> listNode4 = new LinkedList<Object>();
+        tidentifierNode3 = (TIdentifier)nodeArrayList1.get(0);
         {
             // Block
         }
 
-        pstatementNode1 = new ACallStatementStatement(tidentifierNode2, listNode3);
+        pstatementNode1 = new ACallStatementStatement(null, tidentifierNode3, listNode4);
         }
 	nodeList.add(pstatementNode1);
         return nodeList;
@@ -3142,14 +3143,16 @@ public class Parser
         PStatement pstatementNode1;
         {
             // Block
-        TIdentifier tidentifierNode2;
-        LinkedList<Object> listNode3 = new LinkedList<Object>();
-        tidentifierNode2 = (TIdentifier)nodeArrayList2.get(0);
+        PExpression pexpressionNode2;
+        TIdentifier tidentifierNode3;
+        LinkedList<Object> listNode4 = new LinkedList<Object>();
+        pexpressionNode2 = (PExpression)nodeArrayList1.get(0);
+        tidentifierNode3 = (TIdentifier)nodeArrayList2.get(0);
         {
             // Block
         }
 
-        pstatementNode1 = new ACallStatementStatement(tidentifierNode2, listNode3);
+        pstatementNode1 = new ACallStatementStatement(pexpressionNode2, tidentifierNode3, listNode4);
         }
 	nodeList.add(pstatementNode1);
         return nodeList;
@@ -3169,20 +3172,21 @@ public class Parser
         PStatement pstatementNode1;
         {
             // Block
-        TIdentifier tidentifierNode2;
-        LinkedList<Object> listNode4 = new LinkedList<Object>();
-        tidentifierNode2 = (TIdentifier)nodeArrayList1.get(0);
+        @SuppressWarnings("unused") Object nullNode2 = null;
+        TIdentifier tidentifierNode3;
+        LinkedList<Object> listNode5 = new LinkedList<Object>();
+        tidentifierNode3 = (TIdentifier)nodeArrayList1.get(0);
         {
             // Block
-        LinkedList<Object> listNode3 = new LinkedList<Object>();
-        listNode3 = (LinkedList)nodeArrayList3.get(0);
-	if(listNode3 != null)
+        LinkedList<Object> listNode4 = new LinkedList<Object>();
+        listNode4 = (LinkedList)nodeArrayList3.get(0);
+	if(listNode4 != null)
 	{
-	  listNode4.addAll(listNode3);
+	  listNode5.addAll(listNode4);
 	}
         }
 
-        pstatementNode1 = new ACallStatementStatement(tidentifierNode2, listNode4);
+        pstatementNode1 = new ACallStatementStatement(null, tidentifierNode3, listNode5);
         }
 	nodeList.add(pstatementNode1);
         return nodeList;
@@ -3203,20 +3207,22 @@ public class Parser
         PStatement pstatementNode1;
         {
             // Block
-        TIdentifier tidentifierNode2;
-        LinkedList<Object> listNode4 = new LinkedList<Object>();
-        tidentifierNode2 = (TIdentifier)nodeArrayList2.get(0);
+        PExpression pexpressionNode2;
+        TIdentifier tidentifierNode3;
+        LinkedList<Object> listNode5 = new LinkedList<Object>();
+        pexpressionNode2 = (PExpression)nodeArrayList1.get(0);
+        tidentifierNode3 = (TIdentifier)nodeArrayList2.get(0);
         {
             // Block
-        LinkedList<Object> listNode3 = new LinkedList<Object>();
-        listNode3 = (LinkedList)nodeArrayList4.get(0);
-	if(listNode3 != null)
+        LinkedList<Object> listNode4 = new LinkedList<Object>();
+        listNode4 = (LinkedList)nodeArrayList4.get(0);
+	if(listNode4 != null)
 	{
-	  listNode4.addAll(listNode3);
+	  listNode5.addAll(listNode4);
 	}
         }
 
-        pstatementNode1 = new ACallStatementStatement(tidentifierNode2, listNode4);
+        pstatementNode1 = new ACallStatementStatement(pexpressionNode2, tidentifierNode3, listNode5);
         }
 	nodeList.add(pstatementNode1);
         return nodeList;
@@ -3922,14 +3928,15 @@ public class Parser
         PExpression pexpressionNode1;
         {
             // Block
-        TIdentifier tidentifierNode2;
-        LinkedList<Object> listNode3 = new LinkedList<Object>();
-        tidentifierNode2 = (TIdentifier)nodeArrayList1.get(0);
+        @SuppressWarnings("unused") Object nullNode2 = null;
+        TIdentifier tidentifierNode3;
+        LinkedList<Object> listNode4 = new LinkedList<Object>();
+        tidentifierNode3 = (TIdentifier)nodeArrayList1.get(0);
         {
             // Block
         }
 
-        pexpressionNode1 = new ACallExpression(tidentifierNode2, listNode3);
+        pexpressionNode1 = new ACallExpression(null, tidentifierNode3, listNode4);
         }
 	nodeList.add(pexpressionNode1);
         return nodeList;
@@ -3949,14 +3956,16 @@ public class Parser
         PExpression pexpressionNode1;
         {
             // Block
-        TIdentifier tidentifierNode2;
-        LinkedList<Object> listNode3 = new LinkedList<Object>();
-        tidentifierNode2 = (TIdentifier)nodeArrayList2.get(0);
+        PExpression pexpressionNode2;
+        TIdentifier tidentifierNode3;
+        LinkedList<Object> listNode4 = new LinkedList<Object>();
+        pexpressionNode2 = (PExpression)nodeArrayList1.get(0);
+        tidentifierNode3 = (TIdentifier)nodeArrayList2.get(0);
         {
             // Block
         }
 
-        pexpressionNode1 = new ACallExpression(tidentifierNode2, listNode3);
+        pexpressionNode1 = new ACallExpression(pexpressionNode2, tidentifierNode3, listNode4);
         }
 	nodeList.add(pexpressionNode1);
         return nodeList;
@@ -3976,20 +3985,21 @@ public class Parser
         PExpression pexpressionNode1;
         {
             // Block
-        TIdentifier tidentifierNode2;
-        LinkedList<Object> listNode4 = new LinkedList<Object>();
-        tidentifierNode2 = (TIdentifier)nodeArrayList1.get(0);
+        @SuppressWarnings("unused") Object nullNode2 = null;
+        TIdentifier tidentifierNode3;
+        LinkedList<Object> listNode5 = new LinkedList<Object>();
+        tidentifierNode3 = (TIdentifier)nodeArrayList1.get(0);
         {
             // Block
-        LinkedList<Object> listNode3 = new LinkedList<Object>();
-        listNode3 = (LinkedList)nodeArrayList3.get(0);
-	if(listNode3 != null)
+        LinkedList<Object> listNode4 = new LinkedList<Object>();
+        listNode4 = (LinkedList)nodeArrayList3.get(0);
+	if(listNode4 != null)
 	{
-	  listNode4.addAll(listNode3);
+	  listNode5.addAll(listNode4);
 	}
         }
 
-        pexpressionNode1 = new ACallExpression(tidentifierNode2, listNode4);
+        pexpressionNode1 = new ACallExpression(null, tidentifierNode3, listNode5);
         }
 	nodeList.add(pexpressionNode1);
         return nodeList;
@@ -4010,20 +4020,22 @@ public class Parser
         PExpression pexpressionNode1;
         {
             // Block
-        TIdentifier tidentifierNode2;
-        LinkedList<Object> listNode4 = new LinkedList<Object>();
-        tidentifierNode2 = (TIdentifier)nodeArrayList2.get(0);
+        PExpression pexpressionNode2;
+        TIdentifier tidentifierNode3;
+        LinkedList<Object> listNode5 = new LinkedList<Object>();
+        pexpressionNode2 = (PExpression)nodeArrayList1.get(0);
+        tidentifierNode3 = (TIdentifier)nodeArrayList2.get(0);
         {
             // Block
-        LinkedList<Object> listNode3 = new LinkedList<Object>();
-        listNode3 = (LinkedList)nodeArrayList4.get(0);
-	if(listNode3 != null)
+        LinkedList<Object> listNode4 = new LinkedList<Object>();
+        listNode4 = (LinkedList)nodeArrayList4.get(0);
+	if(listNode4 != null)
 	{
-	  listNode4.addAll(listNode3);
+	  listNode5.addAll(listNode4);
 	}
         }
 
-        pexpressionNode1 = new ACallExpression(tidentifierNode2, listNode4);
+        pexpressionNode1 = new ACallExpression(pexpressionNode2, tidentifierNode3, listNode5);
         }
 	nodeList.add(pexpressionNode1);
         return nodeList;

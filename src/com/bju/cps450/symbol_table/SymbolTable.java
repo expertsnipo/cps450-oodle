@@ -16,11 +16,11 @@ import com.bju.cps450.types.Type;
 public class SymbolTable {
 	public class Symbol {
 		private String name;
-		private Declaration decl;
+		private Declaration declaration;
 		
-		public Symbol(String name, Declaration decl) {
+		public Symbol(String name, Declaration declaration) {
 			this.name = name;
-			this.decl = decl;
+			this.declaration = declaration;
 		}
 		
 		public String getName() {
@@ -28,24 +28,26 @@ public class SymbolTable {
 		}
 		
 		public Declaration getDeclaration() {
-			return this.decl;
+			return this.declaration;
 		}
 	}
 	
-	private Stack<HashMap<String, Symbol>> symbolTable = new Stack<HashMap<String, Symbol>>();
-	private Declaration lastPushedDeclaration;
-	private ClassDeclaration lastPushedClass;
-	private MethodDeclaration lastPushedMethod;
-	private VariableDeclaration lastPushedVariable;
+	private Stack<HashMap<String, Symbol>> symbolTable;
+	private ClassDeclaration lastClassDeclaration;
+	private MethodDeclaration lastMethodDeclaration;
+	private VariableDeclaration lastVariableDeclaration;
 	
-	private int scope = 0;
-	public static int GLOBAL_SCOPE = 0;
-	public static int CLASS_SCOPE = 1;
-	public static int METHOD_SCOPE = 2;
+	private int currentScope;
+	public static final int GLOBAL_SCOPE = 1;
+	public static final int CLASS_SCOPE = 2;
+	public static final int METHOD_SCOPE = 3;
 	
 	public SymbolTable() {
 		// push global scope to symbol table
-		symbolTable.push(new HashMap<String, Symbol>());
+		currentScope = 1;
+		symbolTable = new Stack<HashMap<String, Symbol>>();
+		
+		symbolTable.add(new HashMap<String, Symbol>());
 		
 		Type reader = new Type("Reader");	
 		Type writer = new Type("Writer");
@@ -53,75 +55,102 @@ public class SymbolTable {
 		ClassDeclaration readerClass = new ClassDeclaration("Reader", reader);
 		MethodDeclaration readerMethod = new MethodDeclaration("readInt", Type.integer);
 		ClassDeclaration writerClass = new ClassDeclaration("Writer", writer);
-		MethodDeclaration writerMethod = new MethodDeclaration("writeInt", Type.bool);
+		MethodDeclaration writerMethod = new MethodDeclaration("writeInt", Type.voidType);
 		
-		writerMethod.addParameter(new ParameterDeclaration("num", Type.integer));
+		try {
+			writerMethod.addParameter(new ParameterDeclaration("num", Type.integer));
+		} catch (Exception e1) { ; }
+		try {
+			writerMethod.addVariable(new VariableDeclaration("out", writer));
+		} catch (Exception e1) { ; }
 		
-		readerClass.addMethod(readerMethod);
-		writerClass.addMethod(writerMethod);
+		try {
+			readerClass.addMethod(readerMethod);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			writerClass.addMethod(writerMethod);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		symbolTable.peek().put("Writer", new Symbol("Writer", writerClass));
+		symbolTable.peek().put("Reader", new Symbol("Reader", readerClass));
 		
-		push("Reader", readerClass);
+		symbolTable.peek().put("out", new Symbol("out", new VariableDeclaration("out", new Type("Writer"))));
+		symbolTable.peek().put("in", new Symbol("in", new VariableDeclaration("in", new Type("Reader"))));
+		
+		/*push("Reader", readerClass);
 		push("in", new VariableDeclaration("in", reader));
 		
 		
 		push("Writer", new ClassDeclaration("Writer", writer));
 		push("out", new VariableDeclaration("out", writer));
+		*/
 	}
 	
-	public Symbol push(String name, Declaration decl) {
+	public Symbol push(String name, Declaration decl) throws Exception {
 		//create new symbol
 		Symbol s = new Symbol(name, decl);
 		//push on top of symbol stable
-		symbolTable.peek().put(name, s);
+		//symbolTable.peek().put(name, s);
+		if (symbolTable.get(symbolTable.size() - 1).get(name) == null) {
+			symbolTable.get(symbolTable.size() - 1).put(name, s);
+		} else {
+			throw new Exception("an object of the same type and same level with the same name already exists");
+		}
 		
 		//keep track of last pushed
 		if(decl instanceof ClassDeclaration) {
-			this.lastPushedClass = (ClassDeclaration)decl;
+			this.lastClassDeclaration = (ClassDeclaration)decl;
 		}
 		if(decl instanceof MethodDeclaration) {
-			this.lastPushedMethod = (MethodDeclaration)decl;
-		}
-		if(decl instanceof ClassDeclaration) {
-			this.lastPushedClass = (ClassDeclaration)decl;
+			this.lastMethodDeclaration = (MethodDeclaration)decl;
 		}
 		if(decl instanceof VariableDeclaration) {
-			this.lastPushedVariable = (VariableDeclaration)decl;
+			this.lastVariableDeclaration = (VariableDeclaration)decl;
 		}
-		this.lastPushedDeclaration = decl;
 		
 		return s;
 	}
 	
 	public Symbol lookup(String name) throws Exception {
-		for(int i = symbolTable.size() - 1; i >= 0; --i) {
+		return lookup(name, symbolTable.size() - 1);
+	}
+	
+	public Symbol lookup(String name, int startAt) throws Exception {
+		if (startAt < 0) {
+			throw new Exception("startAt must be greater than 0");
+		}
+		for(int i = startAt; i >= 0; --i) {
 			if(symbolTable.get(i).get(name) != null) {
 				return symbolTable.get(i).get(name);
 			}
 		}
 		//throw an exception if the symbol was not found
-		throw new Exception(name + " was not found on symbol table");
+		throw new Exception(name + " was not found in symbol table");
 	}
 	
 	public void beginScope() throws Exception {
-		if(symbolTable.size() == 3) {
+		++currentScope;
+		symbolTable.add(new HashMap<String, Symbol>());
+		
+		if (currentScope > METHOD_SCOPE) {
 			throw new Exception("stack overflow");
 		}
-		++scope;
-		symbolTable.push(new HashMap<String, Symbol>());
 	}
 	
 	public void endScope() throws Exception {
-		if(symbolTable.size() == 0) {
+		--currentScope;
+		if(currentScope < GLOBAL_SCOPE) {
 			throw new Exception("stack underflow");
 		}
+		symbolTable.remove(symbolTable.size() - 1);
 		
-		--scope;
-		HashMap<String, Symbol> current = symbolTable.pop();
-		
-		//merge down into parent
+		/*//merge down into parent
 		Iterator iter = current.entrySet().iterator();
 		if(scope == CLASS_SCOPE) { //if parent is method
-			MethodDeclaration decl = getLastPushedMethod();
+			MethodDeclaration decl = getLastMethodDeclaration();
 			
 			while(iter.hasNext()) {
 				Map.Entry<String, Symbol> entry = (Map.Entry<String, Symbol>)iter.next();
@@ -131,7 +160,7 @@ public class SymbolTable {
 				}
 			}
 		} else if (scope == GLOBAL_SCOPE) { //if parent is class
-			ClassDeclaration decl = getLastPushedClass();
+			ClassDeclaration decl = getLastClassDeclaration();
 			
 			while(iter.hasNext()) {
 				Map.Entry<String, Symbol> entry = (Map.Entry<String, Symbol>)iter.next();
@@ -142,26 +171,22 @@ public class SymbolTable {
 					decl.addMethod((MethodDeclaration)entry.getValue().getDeclaration());
 				}
 			}
-		}
+		}*/
 	}
 	
 	public int getScope() {
-		return this.scope;
+		return currentScope;
 	}
 	
-	public Declaration getLastPushed() {
-		return this.lastPushedDeclaration;
+	public ClassDeclaration getLastClassDeclaration() {
+		return this.lastClassDeclaration;
 	}
 	
-	public ClassDeclaration getLastPushedClass() {
-		return this.lastPushedClass;
+	public MethodDeclaration getLastMethodDeclaration() {
+		return this.lastMethodDeclaration;
 	}
 	
-	public MethodDeclaration getLastPushedMethod() {
-		return this.lastPushedMethod;
-	}
-	
-	public VariableDeclaration getLastPushedVariable() {
-		return this.lastPushedVariable;
+	public VariableDeclaration getLastVariableDeclaration() {
+		return this.lastVariableDeclaration;
 	}
 }

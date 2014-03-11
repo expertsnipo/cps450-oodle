@@ -22,8 +22,17 @@ public abstract class DeclarationsWithVariables extends Declaration {
 		super(name, t);
 	}
 	
-	public void addVariable(VariableDeclaration variable) {
-		variables.put(variable.getName(), variable);
+	/* addVariable
+	 * Arguments:
+	 *   variable : VariableDeclaration - the name of the variable to be added
+	 * Purpose: adds a variable to the current declaration, throws error if already declared
+	 */
+	public void addVariable(VariableDeclaration variable) throws Exception {
+		if(variables.get(variable.getName()) == null) {
+			variables.put(variable.getName(), variable);
+		} else {
+			throw new Exception("a variable with the name " + variable.getName() + " already exists in declaration");
+		}
 	}
 	
 	public List<VariableDeclaration> getVariables() {

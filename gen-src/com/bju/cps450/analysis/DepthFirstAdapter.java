@@ -414,6 +414,10 @@ public class DepthFirstAdapter extends AnalysisAdapter
     public void caseACallStatementStatement(ACallStatementStatement node)
     {
         inACallStatementStatement(node);
+        if(node.getDot() != null)
+        {
+            node.getDot().apply(this);
+        }
         if(node.getIdentifier() != null)
         {
             node.getIdentifier().apply(this);
@@ -955,6 +959,10 @@ public class DepthFirstAdapter extends AnalysisAdapter
     public void caseACallExpression(ACallExpression node)
     {
         inACallExpression(node);
+        if(node.getDot() != null)
+        {
+            node.getDot().apply(this);
+        }
         if(node.getIdentifier() != null)
         {
             node.getIdentifier().apply(this);

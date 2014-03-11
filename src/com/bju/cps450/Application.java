@@ -13,7 +13,7 @@ public class Application {
 	private static Options options;
 	private static FileAndLineNumbers fileAndLineNumbers;
 	private static Errors errors;
-	public static SymbolTable symbolTable = new SymbolTable();
+	private static SymbolTable symbolTable = new SymbolTable();
 	
 	/* getOptions
 	 * Arguments:
@@ -52,5 +52,16 @@ public class Application {
 			errors = new Errors();
 		}
 		return errors;
+	}
+	/* getSymbolTable
+	 * Arguments:
+	 *   
+	 * Purpose: singleton wrapper for global symbol table object
+	 */
+	public static SymbolTable getSymbolTable() {
+		if(symbolTable == null) {
+			symbolTable = new SymbolTable();
+		}
+		return symbolTable;
 	}
 }

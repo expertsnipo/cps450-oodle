@@ -24,8 +24,12 @@ public class ClassDeclaration extends DeclarationsWithVariables {
 		this.inheritsFrom = null;
 	}
 	
-	public void addMethod(MethodDeclaration param) {
-		methods.put(param.getName(), param);
+	public void addMethod(MethodDeclaration param) throws Exception {
+		if(methods.get(param.getName()) == null) {
+			methods.put(param.getName(), param);
+		} else {
+			throw new Exception("a method with name " + param.getName() + " already exists in the declaration");
+		}
 	}
 	
 	public List<MethodDeclaration> getMethods() {
@@ -38,7 +42,12 @@ public class ClassDeclaration extends DeclarationsWithVariables {
 		return methodsList;
 	}
 	
-	protected MethodDeclaration lookupMethod(String name) throws Exception {
+	/* lookupMethod
+	 * Arguments:
+	 *   name : String - the name of the method
+	 * Purpose: looks up the method in the current class, throws error if not found
+	 */
+	public MethodDeclaration lookupMethod(String name) throws Exception {
 		if(methods.get(name) == null) {
 			if(inheritsFrom != null) {
 				try {

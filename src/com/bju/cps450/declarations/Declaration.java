@@ -31,4 +31,6 @@ public class Declaration {
 	public Type getType() {
 		return this.declType;
 	}
+	
+	
 }

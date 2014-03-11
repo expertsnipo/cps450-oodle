@@ -8,6 +8,7 @@ import com.bju.cps450.analysis.*;
 @SuppressWarnings("nls")
 public final class ACallExpression extends PExpression
 {
+    private PExpression _dot_;
     private TIdentifier _identifier_;
     private final LinkedList<PExpression> _expression_ = new LinkedList<PExpression>();
 
@@ -17,10 +18,13 @@ public final class ACallExpression extends PExpression
     }
 
     public ACallExpression(
+        @SuppressWarnings("hiding") PExpression _dot_,
         @SuppressWarnings("hiding") TIdentifier _identifier_,
         @SuppressWarnings("hiding") List<?> _expression_)
     {
         // Constructor
+        setDot(_dot_);
+
         setIdentifier(_identifier_);
 
         setExpression(_expression_);
@@ -31,6 +35,7 @@ public final class ACallExpression extends PExpression
     public Object clone()
     {
         return new ACallExpression(
+            cloneNode(this._dot_),
             cloneNode(this._identifier_),
             cloneList(this._expression_));
     }
@@ -39,6 +44,31 @@ public final class ACallExpression extends PExpression
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseACallExpression(this);
+    }
+
+    public PExpression getDot()
+    {
+        return this._dot_;
+    }
+
+    public void setDot(PExpression node)
+    {
+        if(this._dot_ != null)
+        {
+            this._dot_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._dot_ = node;
     }
 
     public TIdentifier getIdentifier()
@@ -96,6 +126,7 @@ public final class ACallExpression extends PExpression
     public String toString()
     {
         return ""
+            + toString(this._dot_)
             + toString(this._identifier_)
             + toString(this._expression_);
     }
@@ -104,6 +135,12 @@ public final class ACallExpression extends PExpression
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
+        if(this._dot_ == child)
+        {
+            this._dot_ = null;
+            return;
+        }
+
         if(this._identifier_ == child)
         {
             this._identifier_ = null;
@@ -122,6 +159,12 @@ public final class ACallExpression extends PExpression
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
+        if(this._dot_ == oldChild)
+        {
+            setDot((PExpression) newChild);
+            return;
+        }
+
         if(this._identifier_ == oldChild)
         {
             setIdentifier((TIdentifier) newChild);

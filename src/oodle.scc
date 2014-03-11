@@ -139,7 +139,7 @@ Productions
                           statement_list
                           T.end [end_loop]:T.loop {-> New statement.loop_statement(expression.expression, [statement_list.statement])};
                           
-  call_statement {-> statement } = expression_dot? T.identifier T.l_paren expression_list? T.r_paren {-> New statement.call_statement(identifier, [expression_list.expression]) };
+  call_statement {-> statement } = [dot]:expression_dot? T.identifier T.l_paren expression_list? T.r_paren {-> New statement.call_statement(dot.expression, identifier, [expression_list.expression]) };
   
   assignment_statement {-> statement } = T.identifier array* T.assignment expression {-> New statement.assign_statement(identifier, [array.expression], expression.expression) };
                         
@@ -184,7 +184,7 @@ Productions
                         | {null}       T.null {-> New expression.null(null) }
                         | {me}         T.me{-> New expression.me(me) }
                         | {new}        T.new type {-> New expression.new(type.type) }
-                        | {call}       expression_dot? T.identifier T.l_paren expression_list? T.r_paren {-> New expression.call(identifier, [expression_list.expression]) }
+                        | {call}       [dot]:expression_dot? T.identifier T.l_paren expression_list? T.r_paren {-> New expression.call(dot.expression, identifier, [expression_list.expression]) }
                         | {array}      T.identifier array+ {-> New expression.array(identifier, [array.expression]) }
                         | {paren}      T.l_paren expression T.r_paren {-> expression.expression };
   
@@ -221,7 +221,7 @@ Abstract Syntax Tree
     
   statement             = {if_statement}     expression [if]:statement* [else]:statement*  
                         | {loop_statement}   expression statement*
-                        | {call_statement}   identifier expression*
+                        | {call_statement}   [dot]:expression? identifier expression*
                         | {assign_statement} identifier [array]:expression* expression;                     
                           
   expression = {or}  [lhs]:expression [rhs]:expression
@@ -245,7 +245,7 @@ Abstract Syntax Tree
             | {null} null 
             | {me} me 
             | {new} type  
-            | {call} identifier expression*
+            | {call} [dot]:expression? identifier expression*
             | {array} identifier expression*
             | {paren} expression;
   
