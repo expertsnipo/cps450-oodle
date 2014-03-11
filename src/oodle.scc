@@ -94,7 +94,7 @@ Productions
                         
   inherits_clause {-> inherits_class } = T.inherits T.from T.identifier {-> New inherits_class(identifier) };
                      
-  variable_declarations {-> variable } = T.identifier type_declaration? initializer? newlines {-> New variable(identifier, type_declaration.type, initializer.expression) };
+  variable_declarations {-> variable } = T.identifier type_declaration? initializer? newlines {-> New variable(identifier, type_declaration.type, initializer.initializer) };
   
   type_declaration {-> type } = T.colon type {-> type.type};
   
@@ -104,7 +104,7 @@ Productions
                         | {class}   T.identifier {-> New type.class(identifier) }
                         | {array}   type T.l_bracket expression? T.r_bracket {-> New type.array(type, expression) };
   
-  initializer {-> expression } = T.assignment expression {-> expression.expression };
+  initializer {-> initializer } = T.assignment expression {-> New initializer(expression.expression) };
   
   method_declarations {-> method } = [begin_id]:T.identifier T.l_paren argument_list? T.r_paren type_declaration? T.is [begin_newlines]:newlines
 						  variable_declarations*
@@ -203,7 +203,7 @@ Abstract Syntax Tree
                         
   inherits_class        = identifier;
                      
-  variable				= identifier type? expression?;  
+  variable				= identifier type? initializer?;  
   
   type                  = {boolean} boolean
                         | {int}     int
@@ -248,6 +248,8 @@ Abstract Syntax Tree
             | {call} [dot]:expression? identifier expression*
             | {array} identifier expression*
             | {paren} expression;
+            
+  initializer = expression;
   
 
   

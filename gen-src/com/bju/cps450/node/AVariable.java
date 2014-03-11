@@ -9,7 +9,7 @@ public final class AVariable extends PVariable
 {
     private TIdentifier _identifier_;
     private PType _type_;
-    private PExpression _expression_;
+    private PInitializer _initializer_;
 
     public AVariable()
     {
@@ -19,14 +19,14 @@ public final class AVariable extends PVariable
     public AVariable(
         @SuppressWarnings("hiding") TIdentifier _identifier_,
         @SuppressWarnings("hiding") PType _type_,
-        @SuppressWarnings("hiding") PExpression _expression_)
+        @SuppressWarnings("hiding") PInitializer _initializer_)
     {
         // Constructor
         setIdentifier(_identifier_);
 
         setType(_type_);
 
-        setExpression(_expression_);
+        setInitializer(_initializer_);
 
     }
 
@@ -36,7 +36,7 @@ public final class AVariable extends PVariable
         return new AVariable(
             cloneNode(this._identifier_),
             cloneNode(this._type_),
-            cloneNode(this._expression_));
+            cloneNode(this._initializer_));
     }
 
     @Override
@@ -95,16 +95,16 @@ public final class AVariable extends PVariable
         this._type_ = node;
     }
 
-    public PExpression getExpression()
+    public PInitializer getInitializer()
     {
-        return this._expression_;
+        return this._initializer_;
     }
 
-    public void setExpression(PExpression node)
+    public void setInitializer(PInitializer node)
     {
-        if(this._expression_ != null)
+        if(this._initializer_ != null)
         {
-            this._expression_.parent(null);
+            this._initializer_.parent(null);
         }
 
         if(node != null)
@@ -117,7 +117,7 @@ public final class AVariable extends PVariable
             node.parent(this);
         }
 
-        this._expression_ = node;
+        this._initializer_ = node;
     }
 
     @Override
@@ -126,7 +126,7 @@ public final class AVariable extends PVariable
         return ""
             + toString(this._identifier_)
             + toString(this._type_)
-            + toString(this._expression_);
+            + toString(this._initializer_);
     }
 
     @Override
@@ -145,9 +145,9 @@ public final class AVariable extends PVariable
             return;
         }
 
-        if(this._expression_ == child)
+        if(this._initializer_ == child)
         {
-            this._expression_ = null;
+            this._initializer_ = null;
             return;
         }
 
@@ -170,9 +170,9 @@ public final class AVariable extends PVariable
             return;
         }
 
-        if(this._expression_ == oldChild)
+        if(this._initializer_ == oldChild)
         {
-            setExpression((PExpression) newChild);
+            setInitializer((PInitializer) newChild);
             return;
         }
 

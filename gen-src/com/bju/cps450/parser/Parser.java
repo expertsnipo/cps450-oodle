@@ -1659,11 +1659,11 @@ public class Parser
             // Block
         TIdentifier tidentifierNode2;
         @SuppressWarnings("unused") Object nullNode3 = null;
-        PExpression pexpressionNode4;
+        PInitializer pinitializerNode4;
         tidentifierNode2 = (TIdentifier)nodeArrayList1.get(0);
-        pexpressionNode4 = (PExpression)nodeArrayList2.get(0);
+        pinitializerNode4 = (PInitializer)nodeArrayList2.get(0);
 
-        pvariableNode1 = new AVariable(tidentifierNode2, null, pexpressionNode4);
+        pvariableNode1 = new AVariable(tidentifierNode2, null, pinitializerNode4);
         }
 	nodeList.add(pvariableNode1);
         return nodeList;
@@ -1685,12 +1685,12 @@ public class Parser
             // Block
         TIdentifier tidentifierNode2;
         PType ptypeNode3;
-        PExpression pexpressionNode4;
+        PInitializer pinitializerNode4;
         tidentifierNode2 = (TIdentifier)nodeArrayList1.get(0);
         ptypeNode3 = (PType)nodeArrayList2.get(0);
-        pexpressionNode4 = (PExpression)nodeArrayList3.get(0);
+        pinitializerNode4 = (PInitializer)nodeArrayList3.get(0);
 
-        pvariableNode1 = new AVariable(tidentifierNode2, ptypeNode3, pexpressionNode4);
+        pvariableNode1 = new AVariable(tidentifierNode2, ptypeNode3, pinitializerNode4);
         }
 	nodeList.add(pvariableNode1);
         return nodeList;
@@ -1848,9 +1848,15 @@ public class Parser
 
         @SuppressWarnings("unused") ArrayList<Object> nodeArrayList2 = pop();
         @SuppressWarnings("unused") ArrayList<Object> nodeArrayList1 = pop();
-        PExpression pexpressionNode1;
-        pexpressionNode1 = (PExpression)nodeArrayList2.get(0);
-	nodeList.add(pexpressionNode1);
+        PInitializer pinitializerNode1;
+        {
+            // Block
+        PExpression pexpressionNode2;
+        pexpressionNode2 = (PExpression)nodeArrayList2.get(0);
+
+        pinitializerNode1 = new AInitializer(pexpressionNode2);
+        }
+	nodeList.add(pinitializerNode1);
         return nodeList;
     }
 

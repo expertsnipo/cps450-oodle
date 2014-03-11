@@ -146,9 +146,9 @@ public class DepthFirstAdapter extends AnalysisAdapter
         {
             node.getType().apply(this);
         }
-        if(node.getExpression() != null)
+        if(node.getInitializer() != null)
         {
-            node.getExpression().apply(this);
+            node.getInitializer().apply(this);
         }
         outAVariable(node);
     }
@@ -1024,5 +1024,26 @@ public class DepthFirstAdapter extends AnalysisAdapter
             node.getExpression().apply(this);
         }
         outAParenExpression(node);
+    }
+
+    public void inAInitializer(AInitializer node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAInitializer(AInitializer node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAInitializer(AInitializer node)
+    {
+        inAInitializer(node);
+        if(node.getExpression() != null)
+        {
+            node.getExpression().apply(this);
+        }
+        outAInitializer(node);
     }
 }

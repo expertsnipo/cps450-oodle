@@ -141,9 +141,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAVariable(AVariable node)
     {
         inAVariable(node);
-        if(node.getExpression() != null)
+        if(node.getInitializer() != null)
         {
-            node.getExpression().apply(this);
+            node.getInitializer().apply(this);
         }
         if(node.getType() != null)
         {
@@ -1037,5 +1037,26 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
             node.getExpression().apply(this);
         }
         outAParenExpression(node);
+    }
+
+    public void inAInitializer(AInitializer node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAInitializer(AInitializer node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAInitializer(AInitializer node)
+    {
+        inAInitializer(node);
+        if(node.getExpression() != null)
+        {
+            node.getExpression().apply(this);
+        }
+        outAInitializer(node);
     }
 }

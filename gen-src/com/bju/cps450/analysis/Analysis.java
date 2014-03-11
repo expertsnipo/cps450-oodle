@@ -51,6 +51,7 @@ public interface Analysis extends Switch
     void caseACallExpression(ACallExpression node);
     void caseAArrayExpression(AArrayExpression node);
     void caseAParenExpression(AParenExpression node);
+    void caseAInitializer(AInitializer node);
 
     void caseTNewline(TNewline node);
     void caseTComment(TComment node);

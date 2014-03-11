@@ -25,6 +25,7 @@ import com.bju.cps450.node.AGtEqualExpression;
 import com.bju.cps450.node.AIdentifierExpression;
 import com.bju.cps450.node.AIfStatementStatement;
 import com.bju.cps450.node.AInheritsClass;
+import com.bju.cps450.node.AInitializer;
 import com.bju.cps450.node.AIntType;
 import com.bju.cps450.node.AIntegerExpression;
 import com.bju.cps450.node.ALoopStatementStatement;
@@ -80,6 +81,22 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 		System.out.println("At line " + lastLine + " - " + error);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.bju.cps450.analysis.DepthFirstAdapter#outAInitializer(com.bju.cps450.node.AInitializer)
+	 */
+	@Override
+	public void outAInitializer(AInitializer node) {
+		super.outAInitializer(node);
+		initNode(node);
+		//string type is not supported, issue message
+		String error = "Unsupported feature: initializer expression: " + node.toString() + "not supported.";
+		printError(error);
+		attributeGrammarMap.get(node).put("type", Type.error);
+		
+	}
+
+
+
 	private Type checkOperator(Type lhs, Type rhs, List<Type> expected, Type result, String operator) {
 		Type ret = Type.error;
 		if(lhs.compareTo(rhs) != 0) {
@@ -420,7 +437,12 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 	public void outAVariable(AVariable node) {
 		super.outAVariable(node);
 		lastLine = node.getIdentifier().getLine();
-		Type t = (Type)attributeGrammarMap.get(node.getType()).get("type");
+		Type t = null;
+		try {
+			 t = (Type)attributeGrammarMap.get(node.getType()).get("type");
+		} catch (Exception e) {
+			printError("Type for " + node.getIdentifier() + " is not supported");
+		}
 		//make sure the variable does not yet exist in current scope
 		String name = node.getIdentifier().getText();
 		try {
@@ -506,8 +528,13 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 	 */
 	@Override
 	public void outAAndExpression(AAndExpression node) {
-		// TODO Auto-generated method stub
 		super.outAAndExpression(node);
+		initNode(node);
+		Type lhsType = (Type)attributeGrammarMap.get(node.getLhs()).get("type");
+		Type rhsType = (Type)attributeGrammarMap.get(node.getRhs()).get("type");
+		List<Type> expectedTypes = new ArrayList<Type>();
+		expectedTypes.add(Type.bool);
+		attributeGrammarMap.get(node).put("type", checkOperator(lhsType, rhsType, expectedTypes, Type.bool, "and"));
 	}
 
 	/* (non-Javadoc)
@@ -529,8 +556,13 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 	 */
 	@Override
 	public void outAInheritsClass(AInheritsClass node) {
-		// TODO Auto-generated method stub
 		super.outAInheritsClass(node);
+		initNode(node);	
+		lastLine = node.getIdentifier().getLine();
+		//string type is not supported, issue message
+		String error = "Unsupported feature: inherits from: " + node.toString() + "not supported.";
+		printError(error);
+		attributeGrammarMap.get(node).put("type", Type.error);
 	}
 
 
@@ -554,8 +586,11 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 	 */
 	@Override
 	public void outALoopStatementStatement(ALoopStatementStatement node) {
-		// TODO Auto-generated method stub
 		super.outALoopStatementStatement(node);
+		Type t = (Type)attributeGrammarMap.get(node.getExpression()).get("type");
+		if (t.compareTo(Type.bool) != 0) {
+			printError("Loop statement expects condition to be type bool but was type " + t.getName());
+		}
 	}
 
 
@@ -618,8 +653,13 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 	 */
 	@Override
 	public void outAMultExpression(AMultExpression node) {
-		// TODO Auto-generated method stub
 		super.outAMultExpression(node);
+		initNode(node);
+		Type lhsType = (Type)attributeGrammarMap.get(node.getLhs()).get("type");
+		Type rhsType = (Type)attributeGrammarMap.get(node.getRhs()).get("type");
+		List<Type> expectedTypes = new ArrayList<Type>();
+		expectedTypes.add(Type.integer);
+		attributeGrammarMap.get(node).put("type", checkOperator(lhsType, rhsType, expectedTypes, null, "multiply"));
 	}
 
 
@@ -629,8 +669,13 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 	 */
 	@Override
 	public void outADivideExpression(ADivideExpression node) {
-		// TODO Auto-generated method stub
 		super.outADivideExpression(node);
+		initNode(node);
+		Type lhsType = (Type)attributeGrammarMap.get(node.getLhs()).get("type");
+		Type rhsType = (Type)attributeGrammarMap.get(node.getRhs()).get("type");
+		List<Type> expectedTypes = new ArrayList<Type>();
+		expectedTypes.add(Type.integer);
+		attributeGrammarMap.get(node).put("type", checkOperator(lhsType, rhsType, expectedTypes, null, "divide"));
 	}
 
 
@@ -640,8 +685,11 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 	 */
 	@Override
 	public void outAPosExpression(APosExpression node) {
-		// TODO Auto-generated method stub
 		super.outAPosExpression(node);
+		initNode(node);
+		Type rhsType = (Type)attributeGrammarMap.get(node.getExpression()).get("type");
+		
+		attributeGrammarMap.get(node).put("type", rhsType);
 	}
 
 
@@ -651,8 +699,11 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 	 */
 	@Override
 	public void outANegExpression(ANegExpression node) {
-		// TODO Auto-generated method stub
 		super.outANegExpression(node);
+		initNode(node);
+		Type rhsType = (Type)attributeGrammarMap.get(node.getExpression()).get("type");
+		
+		attributeGrammarMap.get(node).put("type", rhsType);
 	}
 
 
@@ -662,8 +713,11 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 	 */
 	@Override
 	public void outANotExpression(ANotExpression node) {
-		// TODO Auto-generated method stub
 		super.outANotExpression(node);
+		initNode(node);
+		Type rhsType = (Type)attributeGrammarMap.get(node.getExpression()).get("type");
+		
+		attributeGrammarMap.get(node).put("type", rhsType);
 	}
 
 
@@ -673,8 +727,12 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 	 */
 	@Override
 	public void outAMeExpression(AMeExpression node) {
-		// TODO Auto-generated method stub
 		super.outAMeExpression(node);
+		initNode(node);
+		lastLine = node.getMe().getLine();
+		String error = "Unsupported feature: array expression - " + node.toString() + "not supported.";	
+		printError(error);
+		attributeGrammarMap.get(node).put("type", Type.error);
 	}
 
 
@@ -684,8 +742,11 @@ public class OodleSemanticChecker extends DepthFirstAdapter {
 	 */
 	@Override
 	public void outANewExpression(ANewExpression node) {
-		// TODO Auto-generated method stub
 		super.outANewExpression(node);
+		initNode(node);
+		String error = "Unsupported feature: new expression - " + node.toString() + "not supported.";	
+		printError(error);
+		attributeGrammarMap.get(node).put("type", Type.error);
 	}
 
 

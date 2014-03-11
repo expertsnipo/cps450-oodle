@@ -309,6 +309,12 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
+    public void caseAInitializer(AInitializer node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
     public void caseTNewline(TNewline node)
     {
         defaultCase(node);
